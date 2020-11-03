@@ -35,7 +35,6 @@ function QuestionList() {
             });
     };
 
-
     const progressToNextQuestion = () => {
         setCounter(counter + 1);
     };
@@ -102,12 +101,10 @@ function QuestionList() {
                 )}
                 {showAnswer && (
                     <Answer correctAnswer={answer} choice={userChoice}></Answer>
-                )
-                }
+                )}
             </div>
         </div >
     );
-
 }
 
 export default QuestionList;
