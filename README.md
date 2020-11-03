@@ -6,4 +6,4 @@ How to run Locally
 3. install dependencies npm i
 4.  `npm start` Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-[ScreenRecording](Screen_Recording_Trivia_App.mov)
+  [ScreenRecording](Screen_Recording_Trivia_App.gif)
