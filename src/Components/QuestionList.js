@@ -6,15 +6,16 @@ import Question from './Question';
 import Answer from './Answer';
 
 function QuestionList() {
+    const [difficulty, setDifficulty] = useState('');
     const [questions, setQuestions] = useState([]);
     const [counter, setCounter] = useState(0);
 
-    const [dropDownName, setDropDownName] = useState('Pick Difficulty');
-
-    const [difficulty, setDifficulty] = useState('');
-    const [userChoice, setUserChoice] = useState('');
-
     const [showQuestion, setShowQuestion] = useState(false);
+
+    const [dropDownName, setDropDownName] = useState('Pick Difficulty');
+    const [questionAmount, setQuestionAmount] = useState('Pick Amount (defaults to five)');
+
+    const [userChoice, setUserChoice] = useState('');
 
     const [showAnswer, setShowAnswer] = useState(false);
     const [answer, setAnswer] = useState('');
@@ -28,7 +29,7 @@ function QuestionList() {
         setCounter(0);
         setQuestions([]);
 
-        axios.get(`https://opentdb.com/api.php?amount=5&difficulty=${difficulty}&type=multiple`)
+        axios.get(`https://opentdb.com/api.php?amount=${questionAmount}&difficulty=${difficulty}&type=multiple`)
             .then(res => {
                 setQuestions(res.data.results);
                 setShowQuestion(true);
@@ -46,6 +47,14 @@ function QuestionList() {
         setDropDownName(`Difficulty: ${difficulty}`);
         setDifficulty(difficulty);
         fetchData();
+    };
+
+    const onQuestionAmountClick = (amount) => {
+        console.log('amount', amount);
+        if (parseInt(amount) < 5) {
+            setQuestionAmount('5');
+        }
+        setQuestionAmount(amount);
     };
 
     const myCallBack = (choice) => {
@@ -78,6 +87,17 @@ function QuestionList() {
                     <Dropdown.Item onClick={() => onDifficultyClick('easy')} >Easy</Dropdown.Item>
                     <Dropdown.Item onClick={() => onDifficultyClick('medium')} > Medium</Dropdown.Item>
                     <Dropdown.Item onClick={() => onDifficultyClick('hard')} > Hard</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+            <Dropdown>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    Amount </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => onQuestionAmountClick('5')} >5</Dropdown.Item>
+                    <Dropdown.Item onClick={() => onQuestionAmountClick('10')} > 10</Dropdown.Item>
+                    <Dropdown.Item onClick={() => onQuestionAmountClick('15')} > 15</Dropdown.Item>
+                    <Dropdown.Item onClick={() => onQuestionAmountClick('20')} > 20</Dropdown.Item>
+
                 </Dropdown.Menu>
             </Dropdown>
             <div>
