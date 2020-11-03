@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Dropdown from 'react-bootstrap/Dropdown';
 
@@ -35,6 +35,7 @@ function QuestionList() {
             });
     };
 
+
     const progressToNextQuestion = () => {
         setCounter(counter + 1);
     };
@@ -48,18 +49,30 @@ function QuestionList() {
         fetchData();
     };
 
-    const myCallBack = (choice) => {
-        setUserChoice(choice);
-        setAnswer(questions[counter].correct_answer);
-        setShowAnswer(true);
-        setCounter(counter + 1);
-
+    const onChoiceClick = (choice) => {
+        setShowQuestion(false);
+        renderAnswer();
         if (isLastQuestion()) {
             setShowQuestion(false);
             setShowRestart(true);
         }
+        setUserChoice(choice);
+        setAnswer(questions[counter].correct_answer);
+        setShowAnswer(true);
+        setCounter(counter + 1);
     };
 
+    const renderAnswer = () => {
+        setTimeout(() => {
+            setShowAnswer(false);
+            if (isLastQuestion()) {
+                setShowQuestion(false);
+                setShowRestart(true);
+            } else {
+                setShowQuestion(true);
+            }
+        }, 2000);
+    };
     const isLastQuestion = () => {
         return counter >= questions.length - 1;
     };
@@ -82,7 +95,7 @@ function QuestionList() {
             </Dropdown>
             <div>
                 {showQuestion && (
-                    <Question callbackFromParent={myCallBack} data={questions[counter]} onQuestionAnswered={progressToNextQuestion}></Question>
+                    <Question callbackFromParent={onChoiceClick} data={questions[counter]} onQuestionAnswered={progressToNextQuestion}></Question>
                 )}
                 {showRestart && (
                     <button onClick={() => restart()}>Restart</button>
