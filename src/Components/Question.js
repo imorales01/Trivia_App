@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 function Question(props) {
-    const [show, setShow] = useState(false);
-
     const onClickHandler = (choice) => {
-        setShow(true);
         props.callbackFromParent(choice);
     };
 

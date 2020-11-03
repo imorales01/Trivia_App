@@ -6,7 +6,7 @@ function Answer(props) {
         <div>
             <Modal.Dialog>
                 <Modal.Body>
-                    <p>{props.correctAnswer == props.choice ? 'correct' : `incorrect. correct answer was ${props.correctAnswer}`}</p>
+                    <p>{props.correctAnswer == props.choice ? 'Correct!' : `Incorrect! The correct answer was: ${props.correctAnswer}`}</p>
                 </Modal.Body>
             </Modal.Dialog>
         </div>
