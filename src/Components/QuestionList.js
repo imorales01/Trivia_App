@@ -9,30 +9,27 @@ function QuestionList() {
     const [questions, setQuestions] = useState([]);
     const [counter, setCounter] = useState(0);
 
-    const [dropDownName, setDropDownName] = useState('Pick Difficulty');
-
     const [difficulty, setDifficulty] = useState('');
     const [userChoice, setUserChoice] = useState('');
 
     const [showQuestion, setShowQuestion] = useState(false);
-
     const [showAnswer, setShowAnswer] = useState(false);
     const [answer, setAnswer] = useState('');
 
-    const [showRestart, setShowRestart] = useState(false);
-
     const fetchData = () => {
-        setShowQuestion(false);
-        setShowAnswer(false);
-        setShowRestart(false);
-        setCounter(0);
-        setQuestions([]);
-
-        axios.get(`https://opentdb.com/api.php?amount=5&difficulty=${difficulty}&type=multiple`)
+        reset();
+        axios.get(`https://opentdb.com/api.php?amount=10&difficulty=${difficulty}&type=multiple`)
             .then(res => {
                 setQuestions(res.data.results);
                 setShowQuestion(true);
             });
+    };
+
+    const reset = () => {
+        setShowQuestion(false);
+        setShowAnswer(false);
+        setCounter(0);
+        setQuestions([]);
     };
 
     const progressToNextQuestion = () => {
@@ -40,10 +37,6 @@ function QuestionList() {
     };
 
     const onDifficultyClick = (difficulty) => {
-        if (isLastQuestion()) {
-            setShowRestart(false);
-        }
-        setDropDownName(`Difficulty: ${difficulty}`);
         setDifficulty(difficulty);
         fetchData();
     };
@@ -53,12 +46,11 @@ function QuestionList() {
         renderAnswer();
         if (isLastQuestion()) {
             setShowQuestion(false);
-            setShowRestart(true);
         }
         setUserChoice(choice);
         setAnswer(questions[counter].correct_answer);
         setShowAnswer(true);
-        setCounter(counter + 1);
+        progressToNextQuestion();
     };
 
     const renderAnswer = () => {
@@ -66,26 +58,22 @@ function QuestionList() {
             setShowAnswer(false);
             if (isLastQuestion()) {
                 setShowQuestion(false);
-                setShowRestart(true);
+                fetchData();
             } else {
                 setShowQuestion(true);
             }
         }, 2000);
     };
+
     const isLastQuestion = () => {
         return counter >= questions.length - 1;
-    };
-
-    const restart = () => {
-        setShowRestart(false);
-        fetchData();
     };
 
     return (
         <div>
             <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    {dropDownName} </Dropdown.Toggle>
+                    {difficulty ? 'Difficulty:' : 'Select Difficulty'} {difficulty} </Dropdown.Toggle>
                 <Dropdown.Menu>
                     <Dropdown.Item onClick={() => onDifficultyClick('easy')} >Easy</Dropdown.Item>
                     <Dropdown.Item onClick={() => onDifficultyClick('medium')} > Medium</Dropdown.Item>
@@ -94,10 +82,7 @@ function QuestionList() {
             </Dropdown>
             <div>
                 {showQuestion && (
-                    <Question callbackFromParent={onChoiceClick} data={questions[counter]} onQuestionAnswered={progressToNextQuestion}></Question>
-                )}
-                {showRestart && (
-                    <button onClick={() => restart()}>Restart</button>
+                    <Question callbackFromParent={onChoiceClick} data={questions[counter]}></Question>
                 )}
                 {showAnswer && (
                     <Answer correctAnswer={answer} choice={userChoice}></Answer>

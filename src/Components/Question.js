@@ -5,12 +5,20 @@ function Question(props) {
         props.callbackFromParent(choice);
     };
 
+    const renderOptions = () => {
+        return (
+            props?.data?.incorrect_answers?.map(incorrectAnswer => {
+                return (
+                    <button onClick={() => { onClickHandler(incorrectAnswer); }}>{incorrectAnswer}</button>
+                );
+            })
+        );
+    };
+
     return (
         <div>
             <h1>{props?.data?.question} </h1>
-            <button onClick={() => { onClickHandler(props?.data?.incorrect_answers[0]); }} >{props?.data?.incorrect_answers[0]}</button>
-            <button onClick={() => { onClickHandler(props?.data?.incorrect_answers[1]); }}>{props?.data?.incorrect_answers[1]}</button>
-            <button onClick={() => { onClickHandler(props?.data?.incorrect_answers[2]); }}>{props?.data?.incorrect_answers[2]}</button>
+            {renderOptions()}
             <button onClick={() => { onClickHandler(props?.data?.correct_answer); }}>{props?.data?.correct_answer}</button>
         </div >
     );
